@@ -69,7 +69,7 @@ export default function Dashboard() {
           <p className="mt-3 max-w-xl text-base text-white/90">
             {hasAnyLogs
               ? `You've saved ${bottles} bottles and avoided ~${co2Kg.toFixed(0)} kg CO₂. Keep it up.`
-              : 'Log daily habits like skipping plastic bottles and biking—see your environmental impact add up.'}
+              : 'Log daily habits like skipping plastic bottles and biking. See your environmental impact add up.'}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link

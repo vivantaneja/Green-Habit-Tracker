@@ -35,7 +35,7 @@ export default function ReTurn() {
             Re-turn
           </h1>
           <p className="mt-3 max-w-xl text-base text-white/90">
-            Ireland’s deposit return scheme. Log bottles and cans you return—track your refund and impact.
+            Ireland’s deposit return scheme. Log bottles and cans you return and track your refund and impact.
           </p>
           <p className="mt-2 text-base text-primary-200">
             Small: 150ml–500ml (15c) · Large: 500ml–3L (25c)
