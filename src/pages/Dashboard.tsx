@@ -42,9 +42,14 @@ export default function Dashboard() {
   const getCount = (habitId: string) =>
     todayLogs.find((l) => l.habitId === habitId)?.count ?? 0
 
-  const handleLog = (habitId: string, amountToAdd: number) => {
+  const handleAdjust = (habitId: string, delta: number) => {
     const current = getCount(habitId)
-    addLog({ date: today, habitId, count: current + amountToAdd })
+    const next = Math.max(0, current + delta)
+    if (next <= 0) {
+      removeLog(today, habitId)
+      return
+    }
+    addLog({ date: today, habitId, count: next })
   }
 
   const hasAnyLogs = logs.length > 0
@@ -112,7 +117,7 @@ export default function Dashboard() {
           <div>
             <h2 className="text-sm font-medium text-slate-900">Today’s habits</h2>
             <p className="mt-0.5 text-sm text-slate-500">
-              Add an amount (or leave blank for 1) and tap Log. Total for today is shown.
+              Enter an amount (or leave blank for 1), then log or reduce it. Total for today is shown.
             </p>
           </div>
           <Link
@@ -131,7 +136,7 @@ export default function Dashboard() {
                   key={habit.id}
                   habit={habit}
                   count={count}
-                  onLog={(amount) => handleLog(habit.id, amount)}
+                  onAdjust={(delta) => handleAdjust(habit.id, delta)}
                   distanceUnit={distanceUnit}
                 />
               )

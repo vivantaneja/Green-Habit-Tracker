@@ -23,8 +23,8 @@ interface HabitCardProps {
   habit: Habit
   /** Total for today (in storage unit: count or km) */
   count: number
-  /** Called when user clicks Log; amount is in storage unit (count or km). Adds to existing total. */
-  onLog: (amountToAdd: number) => void
+  /** Called when user adjusts today's total; delta is in storage unit (count or km). */
+  onAdjust: (delta: number) => void
   /** Display unit for distance habits (count is always stored in km) */
   distanceUnit?: DistanceUnit
 }
@@ -32,7 +32,7 @@ interface HabitCardProps {
 export function HabitCard({
   habit,
   count = 0,
-  onLog,
+  onAdjust,
   distanceUnit = 'km',
 }: HabitCardProps) {
   const isDistanceHabit = habit.co2KgPerKm != null
@@ -41,11 +41,19 @@ export function HabitCard({
   const unitLabelShort = isDistanceHabit ? unitLabel : habit.unit.replace(/\s+(saved|avoided)$/i, '')
   const [addInput, setAddInput] = useState('')
 
-  const handleLog = () => {
+  const getAmountFromInput = () => {
     const parsed = addInput.trim() === '' ? null : parseFloat(addInput)
     const amount = parsed != null && !Number.isNaN(parsed) && parsed > 0 ? parsed : 1
-    const amountInStorage = isDistanceHabit && distanceUnit === 'miles' ? milesToKm(amount) : amount
-    onLog(amountInStorage)
+    return isDistanceHabit && distanceUnit === 'miles' ? milesToKm(amount) : amount
+  }
+
+  const handleAdd = () => {
+    onAdjust(getAmountFromInput())
+    setAddInput('')
+  }
+
+  const handleReduce = () => {
+    onAdjust(-getAmountFromInput())
     setAddInput('')
   }
 
@@ -69,7 +77,7 @@ export function HabitCard({
         </div>
         <div className="flex items-center gap-2 h-9 justify-end">
           <label className="flex items-center gap-1.5 h-full">
-            <span className="text-sm text-slate-600 leading-none">Add:</span>
+            <span className="text-sm text-slate-600 leading-none">Amount:</span>
             <input
               type="number"
               min={0}
@@ -78,16 +86,23 @@ export function HabitCard({
               value={addInput}
               placeholder="1"
               onChange={(e) => setAddInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleLog())}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAdd())}
             />
             <span className="inline-block text-sm text-slate-500 leading-none align-middle">{unitLabelShort}</span>
           </label>
           <button
             type="button"
-            onClick={handleLog}
+            onClick={handleAdd}
             className="h-9 rounded-lg px-4 py-0 text-sm font-semibold bg-primary-600 text-white hover:bg-primary-700 transition-colors shadow-sm flex items-center justify-center"
           >
             Log
+          </button>
+          <button
+            type="button"
+            onClick={handleReduce}
+            className="h-9 rounded-lg px-3 py-0 text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors flex items-center justify-center"
+          >
+            Reduce
           </button>
         </div>
       </div>

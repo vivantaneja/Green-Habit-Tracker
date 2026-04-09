@@ -3,19 +3,6 @@ import { SuggestionForm } from '../components/SuggestionForm'
 import { SuggestionList } from '../components/SuggestionList'
 import { useSuggestions } from '../hooks/useSuggestions'
 
-function downloadSuggestionsAsFile(suggestions: { id: string; text: string; createdAt: string }[]) {
-  const blob = new Blob(
-    [JSON.stringify({ exportedAt: new Date().toISOString(), suggestions }, null, 2)],
-    { type: 'application/json' }
-  )
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `green-habit-suggestions-${new Date().toISOString().slice(0, 10)}.json`
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
 export default function Suggestions() {
   const { suggestions, addSuggestion, removeSuggestion, clearAllSuggestions } = useSuggestions()
 
@@ -34,7 +21,7 @@ export default function Suggestions() {
           Request an option
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          Suggest a new habit or feature. Stored locally on your device.
+          Suggest a new habit or feature for developers to review and add in future updates.
         </p>
       </div>
 
@@ -48,13 +35,6 @@ export default function Suggestions() {
           <h2 className="text-sm font-medium text-slate-900">Your suggestions</h2>
           {suggestions.length > 0 && (
             <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => downloadSuggestionsAsFile(suggestions)}
-                className="text-sm font-medium text-primary-700 hover:text-primary-800 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
-              >
-                Download all to file
-              </button>
               <button
                 type="button"
                 onClick={handleClearAll}
