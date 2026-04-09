@@ -18,6 +18,21 @@ export function useUnitPreferences(): [
   )
 
   useEffect(() => {
+    setPrefs((prev) => {
+      const normalized: UnitPreferences = {
+        distance: prev.distance === 'miles' ? 'miles' : 'km',
+        massSystem: prev.massSystem === 'imperial' ? 'imperial' : 'metric',
+        volumeSystem: prev.volumeSystem === 'imperial' ? 'imperial' : 'metric',
+      }
+      const isSame =
+        prev.distance === normalized.distance &&
+        prev.massSystem === normalized.massSystem &&
+        prev.volumeSystem === normalized.volumeSystem
+      return isSame ? prev : normalized
+    })
+  }, [setPrefs])
+
+  useEffect(() => {
     try {
       const legacyDistance = localStorage.getItem(LEGACY_DISTANCE_KEY)
       if (!legacyDistance) return

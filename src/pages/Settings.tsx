@@ -46,38 +46,28 @@ export default function Settings() {
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
         <h2 className="text-sm font-medium text-slate-900 mb-3">Mass</h2>
         <p className="text-sm text-slate-500 mb-4">
-          Used for weight-based habits (for example composting).
+          Choose metric or imperial. The app auto-switches units (for example g ↔ kg, oz ↔ lb).
         </p>
         <div className="flex flex-wrap gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="massUnit"
-              checked={unitPrefs.mass === 'auto'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, mass: 'auto' }))}
+              checked={unitPrefs.massSystem === 'metric'}
+              onChange={() => setUnitPrefs((prev) => ({ ...prev, massSystem: 'metric' }))}
               className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-sm font-medium text-slate-700">Auto (g ↔ kg)</span>
+            <span className="text-sm font-medium text-slate-700">Metric</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="massUnit"
-              checked={unitPrefs.mass === 'grams'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, mass: 'grams' }))}
+              checked={unitPrefs.massSystem === 'imperial'}
+              onChange={() => setUnitPrefs((prev) => ({ ...prev, massSystem: 'imperial' }))}
               className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-sm font-medium text-slate-700">Grams (g)</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="massUnit"
-              checked={unitPrefs.mass === 'kilograms'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, mass: 'kilograms' }))}
-              className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
-            />
-            <span className="text-sm font-medium text-slate-700">Kilograms (kg)</span>
+            <span className="text-sm font-medium text-slate-700">Imperial</span>
           </label>
         </div>
       </section>
@@ -85,77 +75,28 @@ export default function Settings() {
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
         <h2 className="text-sm font-medium text-slate-900 mb-3">Volume</h2>
         <p className="text-sm text-slate-500 mb-4">
-          Used for volume-based habits.
+          Choose metric or imperial. The app auto-switches units (for example ml ↔ l, fl oz ↔ gal).
         </p>
         <div className="flex flex-wrap gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="volumeUnit"
-              checked={unitPrefs.volume === 'auto'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, volume: 'auto' }))}
+              checked={unitPrefs.volumeSystem === 'metric'}
+              onChange={() => setUnitPrefs((prev) => ({ ...prev, volumeSystem: 'metric' }))}
               className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-sm font-medium text-slate-700">Auto (ml ↔ l)</span>
+            <span className="text-sm font-medium text-slate-700">Metric</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="volumeUnit"
-              checked={unitPrefs.volume === 'millilitres'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, volume: 'millilitres' }))}
+              checked={unitPrefs.volumeSystem === 'imperial'}
+              onChange={() => setUnitPrefs((prev) => ({ ...prev, volumeSystem: 'imperial' }))}
               className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-sm font-medium text-slate-700">Millilitres (ml)</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="volumeUnit"
-              checked={unitPrefs.volume === 'litres'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, volume: 'litres' }))}
-              className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
-            />
-            <span className="text-sm font-medium text-slate-700">Litres (l)</span>
-          </label>
-        </div>
-      </section>
-
-      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
-        <h2 className="text-sm font-medium text-slate-900 mb-3">Duration</h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Used for time-based habits.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="durationUnit"
-              checked={unitPrefs.duration === 'auto'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, duration: 'auto' }))}
-              className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
-            />
-            <span className="text-sm font-medium text-slate-700">Auto (min ↔ h)</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="durationUnit"
-              checked={unitPrefs.duration === 'minutes'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, duration: 'minutes' }))}
-              className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
-            />
-            <span className="text-sm font-medium text-slate-700">Minutes (min)</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="durationUnit"
-              checked={unitPrefs.duration === 'hours'}
-              onChange={() => setUnitPrefs((prev) => ({ ...prev, duration: 'hours' }))}
-              className="h-4 w-4 border-slate-300 text-primary-600 focus:ring-primary-500"
-            />
-            <span className="text-sm font-medium text-slate-700">Hours (h)</span>
+            <span className="text-sm font-medium text-slate-700">Imperial</span>
           </label>
         </div>
       </section>

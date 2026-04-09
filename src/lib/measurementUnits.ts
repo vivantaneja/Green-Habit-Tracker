@@ -1,27 +1,35 @@
 import type { DistanceUnit } from './distanceUnit'
 import { kmToMiles, milesToKm } from './distanceUnit'
 
-export type MassUnitPreference = 'auto' | 'grams' | 'kilograms'
-export type VolumeUnitPreference = 'auto' | 'millilitres' | 'litres'
-export type DurationUnitPreference = 'auto' | 'minutes' | 'hours'
+export type UnitSystem = 'metric' | 'imperial'
 
 export interface UnitPreferences {
   distance: DistanceUnit
-  mass: MassUnitPreference
-  volume: VolumeUnitPreference
-  duration: DurationUnitPreference
+  massSystem: UnitSystem
+  volumeSystem: UnitSystem
 }
 
 export const DEFAULT_UNIT_PREFERENCES: UnitPreferences = {
   distance: 'km',
-  mass: 'auto',
-  volume: 'auto',
-  duration: 'auto',
+  massSystem: 'metric',
+  volumeSystem: 'metric',
 }
 
 type MeasurementKind = 'distance' | 'mass' | 'volume' | 'duration'
 type BaseUnit = 'km' | 'g' | 'ml' | 'min'
-type DisplayUnit = 'km' | 'mi' | 'g' | 'kg' | 'ml' | 'l' | 'min' | 'h'
+type DisplayUnit =
+  | 'km'
+  | 'mi'
+  | 'g'
+  | 'kg'
+  | 'oz'
+  | 'lb'
+  | 'ml'
+  | 'l'
+  | 'fl oz'
+  | 'gal'
+  | 'min'
+  | 'h'
 
 interface MeasurementDefinition {
   kind: MeasurementKind
@@ -44,17 +52,19 @@ function resolveDisplayUnit(def: MeasurementDefinition, prefs: UnitPreferences, 
     return prefs.distance === 'miles' ? 'mi' : 'km'
   }
   if (def.kind === 'mass') {
-    if (prefs.mass === 'kilograms') return 'kg'
-    if (prefs.mass === 'grams') return 'g'
+    if (prefs.massSystem === 'imperial') {
+      const ounces = baseValue / 28.349523125
+      return Math.abs(ounces) >= 16 ? 'lb' : 'oz'
+    }
     return Math.abs(baseValue) >= 1000 ? 'kg' : 'g'
   }
   if (def.kind === 'volume') {
-    if (prefs.volume === 'litres') return 'l'
-    if (prefs.volume === 'millilitres') return 'ml'
+    if (prefs.volumeSystem === 'imperial') {
+      const flOz = baseValue / 29.5735295625
+      return Math.abs(flOz) >= 128 ? 'gal' : 'fl oz'
+    }
     return Math.abs(baseValue) >= 1000 ? 'l' : 'ml'
   }
-  if (prefs.duration === 'hours') return 'h'
-  if (prefs.duration === 'minutes') return 'min'
   return Math.abs(baseValue) >= 60 ? 'h' : 'min'
 }
 
@@ -64,8 +74,16 @@ function convertBaseToDisplay(baseValue: number, displayUnit: DisplayUnit): numb
       return kmToMiles(baseValue)
     case 'kg':
       return baseValue / 1000
+    case 'oz':
+      return baseValue / 28.349523125
+    case 'lb':
+      return baseValue / 453.59237
     case 'l':
       return baseValue / 1000
+    case 'fl oz':
+      return baseValue / 29.5735295625
+    case 'gal':
+      return baseValue / 3785.411784
     case 'h':
       return baseValue / 60
     default:
@@ -79,8 +97,16 @@ function convertDisplayToBase(displayValue: number, displayUnit: DisplayUnit): n
       return milesToKm(displayValue)
     case 'kg':
       return displayValue * 1000
+    case 'oz':
+      return displayValue * 28.349523125
+    case 'lb':
+      return displayValue * 453.59237
     case 'l':
       return displayValue * 1000
+    case 'fl oz':
+      return displayValue * 29.5735295625
+    case 'gal':
+      return displayValue * 3785.411784
     case 'h':
       return displayValue * 60
     default:
@@ -91,7 +117,11 @@ function convertDisplayToBase(displayValue: number, displayUnit: DisplayUnit): n
 function getDisplayStep(displayUnit: DisplayUnit): number {
   if (displayUnit === 'mi') return 0.1
   if (displayUnit === 'km') return 0.5
+  if (displayUnit === 'lb') return 0.1
+  if (displayUnit === 'oz') return 1
   if (displayUnit === 'kg') return 0.1
+  if (displayUnit === 'fl oz') return 1
+  if (displayUnit === 'gal') return 0.1
   if (displayUnit === 'l') return 0.1
   if (displayUnit === 'h') return 0.1
   return 1
